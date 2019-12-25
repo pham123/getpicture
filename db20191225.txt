@@ -1,0 +1,5 @@
+ALTER TABLE link ADD LinkTitle varchar(255); ;
+ALTER TABLE link ADD LinkPicture varchar(255);;
+ALTER TABLE link DROP INDEX LinkName ;;
+ALTER TABLE link DROP LinkName ; ;
+ALTER TABLE link ADD LinkName varchar(255);;
