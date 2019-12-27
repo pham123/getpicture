@@ -49,8 +49,11 @@ while (!$file->eof()) {
     echo $link = $file->fgets();
     $link = trim(preg_replace('/\s\s+/', ' ', $link));
     // đẩy file lên database
-    $sql = "UPDATE getimg.link set LinkOption = 1, LinkPicture='NA', LinkTitle = 'NA', LinkName=? Where LinkId=?";
-    $oDB->query($sql,$link,$i);
+    if (strlen($link)>10) {
+        $sql = "UPDATE getimg.link set LinkOption = 1, LinkPicture='NA', LinkTitle = 'NA', LinkName=? Where LinkId=?";
+        $oDB->query($sql,$link,$i);
+    }
+
     $i++;
 
     
