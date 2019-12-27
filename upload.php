@@ -18,7 +18,7 @@ $oDB=new db();
 </html>
 <?php
 
-for ($i=1; $i < 251; $i++) { 
+for ($i=1; $i < 2001; $i++) { 
     # code...
     $sql ="UPDATE getimg.link SET LinkName = 'NA', LinkPicture = 'NA', LinkTitle='NA', LinkOption = 0 where LinkId = ?";
     $oDB->query($sql,$i);
