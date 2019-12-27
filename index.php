@@ -87,14 +87,11 @@ if (isset($next['LinkId'])) {
 $nextlinkid   = (isset($next['LinkId'])) ? $next['LinkId'] : '' ;
 function file_get_contents_curl($url) { 
     $ch = curl_init(); 
-  
     curl_setopt($ch, CURLOPT_HEADER, 0); 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
     curl_setopt($ch, CURLOPT_URL, $url); 
-  
     $data = curl_exec($ch); 
     curl_close($ch); 
-  
     return $data; 
 } 
 // var_dump($key);
@@ -104,10 +101,22 @@ foreach ($arr as $key => $value) {
     $flink ="";
     if (isset($_GET['get'])&&$nextlinkid==$value['LinkId']) {
       echo $url = $value['LinkName'];
- 
-      $html = file_get_html($url);
       
+      if (file_get_html($url)) {
+        $html = file_get_html($url);
+      } else {
+        echo "Không get được file";
+        $sql = "UPDATE link set LinkOption = 4 Where LinkId=?";
+        $oDB->query($sql,$value['LinkId']);
+        exit();
+      }
+      
+
+      
+      // var_dump($html);
+      // exit();
       $images = array();
+ 
       foreach($html->find('img[id=landingImage]') as $img) {
       $images[] = $img->src;
       }
@@ -116,6 +125,7 @@ foreach ($arr as $key => $value) {
       foreach($html->find('span[id=productTitle]') as $header) {
       $headlines[] = $header->plaintext;
       }
+
 
       $link = $images[0];
       $title = $headlines[0];
