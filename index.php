@@ -11,7 +11,7 @@ $arr = $oDB->query($sql)->fetchAll();
 <head>
     <meta charset="UTF-8">
     <?php
-    $timerf = rand(5,20);
+    $timerf = rand(10,20);
       if (isset($_GET['get'])) {
         ?>
         
