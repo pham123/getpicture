@@ -36,12 +36,7 @@ if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $uploadfile)) {
 $_SESSION['file']= $_FILES["fileToUpload"]["name"];
 
 // echo 'Here is some more debugging info:';
-// print_r($_FILES);
-
-// print "</pre>";
-
 $file = new SplFileObject($target_dir . basename($_FILES["fileToUpload"]["name"]));
-
 // Loop until we reach the end of the file.
 $i = 1;
 while (!$file->eof()) {
@@ -53,10 +48,7 @@ while (!$file->eof()) {
         $sql = "UPDATE getimg.link set LinkOption = 1, LinkPicture='NA', LinkTitle = 'NA', LinkName=? Where LinkId=?";
         $oDB->query($sql,$link,$i);
     }
-
-    $i++;
-
-    
+    $i++;  
 }
 
 // Unset the file to call __destruct(), closing the file handle.

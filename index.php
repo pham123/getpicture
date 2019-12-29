@@ -11,10 +11,11 @@ $arr = $oDB->query($sql)->fetchAll();
 <head>
     <meta charset="UTF-8">
     <?php
+    $timerf = rand(5,20);
       if (isset($_GET['get'])) {
         ?>
         
-        <meta http-equiv="refresh" content="5">
+        <meta http-equiv="refresh" content="<?php echo($timerf) ?>">
         <?php
       }
     ?>
@@ -63,7 +64,7 @@ $count = $oDB->query($sql)->fetchArray();
 $sql = "SELECT COUNT(*) as total FROM link Where LinkOption = 1";
 $count2 = $oDB->query($sql)->fetchArray();
 echo "<h1>".$count['total']."/".$count2['total']."</h1>";
-
+echo "<h3>Reset sau :".$timerf." giây</h3>"
 ?>
 <table id="customers">
 <!-- <tr>
@@ -126,7 +127,11 @@ foreach ($arr as $key => $value) {
       $headlines[] = $header->plaintext;
       }
 
-
+      if (!isset($images[0])) {
+        header('Location: index.php');
+        exit();
+        echo $images[0];
+      }
       $link = $images[0];
       $title = $headlines[0];
       $link1 = substr($link,0,36);
@@ -209,17 +214,7 @@ foreach ($arr as $key => $value) {
 
     $sql = "UPDATE link set LinkOption = 2, LinkPicture=?, LinkTitle = ? Where LinkId=?";
     $oDB->query($sql,$name,$title,$value['LinkId']);
-
-    //sleep(10);
-    
-    // header('Location:?get');
-
-    // }else{
-    //   // header('Location:?get');
-    //   echo "ko được";
-    //   //exit();
-    // }
-  
+ 
   
     }
     if (!isset($_GET['get'])) {

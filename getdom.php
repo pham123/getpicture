@@ -2,15 +2,22 @@
  
 include('simple_html_dom.php');
  
-$url = 'https://www.amazon.com/dp/B082V1PGFY?customId=B0752XJYNL';
+$url = 'https://www.amazon.com/dp/B0838FCMMF';
  
 $html = file_get_html($url);
- 
+
+// var_dump($html);
+
+// exit();
 $images = array();
-foreach($html->find('img[id=landingImage]') as $img) {
+foreach($html->find('img') as $img) {
  $images[] = $img->src;
 }
 
+echo "<pre>";
+var_dump($images);
+echo "</pre>";
+exit();
 $headlines = array();
 foreach($html->find('span[id=productTitle]') as $header) {
  $headlines[] = $header->plaintext;
