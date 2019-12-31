@@ -11,7 +11,7 @@ $arr = $oDB->query($sql)->fetchAll();
 <head>
     <meta charset="UTF-8">
     <?php
-    $timerf = rand(10,20);
+    $timerf = rand(7,12);
       if (isset($_GET['get'])) {
         ?>
         
@@ -101,7 +101,8 @@ foreach ($arr as $key => $value) {
     $title ="";
     $flink ="";
     if (isset($_GET['get'])&&$nextlinkid==$value['LinkId']) {
-      echo $url = $value['LinkName'];
+      $url = $value['LinkName'];
+      echo "<a href='".$url."' target='_blank'>".$url."</a>";
       
       if (file_get_html($url)) {
         $html = file_get_html($url);
