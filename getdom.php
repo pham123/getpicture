@@ -2,7 +2,7 @@
  
 include('simple_html_dom.php');
  
-$url = 'https://www.amazon.com/dp/B0838FCMMF';
+echo $url = 'https://www.amazon.com/Shane-Dawson-God-Pig-T-Shirt/dp/B07KVK9CL4/ref=sxbs_sxwds-stvp?fst=as%3Aoff&pd_rd_i=B07KVK9CL4&pd_rd_r=a24e37ae-693c-4936-814d-b18ca7a6f104&pd_rd_w=6Iinc&pd_rd_wg=M4AGu&pf_rd_p=a6d018ad-f20b-46c9-8920-433972c7d9b7&pf_rd_r=A23M2N6QQS0Q60QT8QHQ&psc=1&qid=1578124368&refinements=p_89%3AShane+Dawson&rnid=2528832011&s=apparel#customerReviews';
  
 $html = file_get_html($url);
 
@@ -36,9 +36,7 @@ echo "</pre>";
 // }
 // https://m.media-amazon.com/images/I/A13usaonutL._CLa%7C500%2C468%7C41I1J3hKa0L.png%7C0%2C0%2C500%2C468%2B0.0%2C0.0%2C500.0%2C468.0._SX342_.png
 $link = $images[0];
-echo "<br>";
-echo "https://m.media-amazon.com/images/I/A13usaonutL._CLa%7C2140%2C2000%7C71DBCcLK93L.png%7C0%2C0%2C2140%2C2000%2B0.0%2C0.0%2C2140.0%2C2000.0._SX425._SX._UX._SY._UY_.png";
-echo "<br>";
+
 echo $link1 = substr($link,0,36);
 // echo "<br>";
 // echo $link2 = substr($link,72,15);

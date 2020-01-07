@@ -221,7 +221,7 @@ foreach ($arr as $key => $value) {
     if (!isset($_GET['get'])) {
       echo "<tr>";
     echo "<td>".$value['LinkId']."</td>";
-    echo "<td>".$value['LinkName']."</td>";
+    echo "<td><a href='".$value['LinkName']."'>".$value['LinkName']."</a></td>";
     echo "<td></td>";
     echo "<td>".$value['LinkTitle']."</td>";
     echo "<td>".$value['LinkPicture']."</td>";
