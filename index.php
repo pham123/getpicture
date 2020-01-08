@@ -210,7 +210,7 @@ foreach ($arr as $key => $value) {
     // $im=imagecreatefrompng ( 'image/rs/'.$name );
     // $image->setImageResolution(500, 500);
     $image->load('image/rs/'.$name);
-    $image->resizeToWidth(2100);
+    $image->resizeToWidth(2400);
     $image->save('image/fn/'.$name);
 
     $sql = "UPDATE link set LinkOption = 2, LinkPicture=?, LinkTitle = ? Where LinkId=?";
