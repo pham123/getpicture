@@ -2,7 +2,7 @@
  
 include('simple_html_dom.php');
  
-echo $url = 'https://www.amazon.com/Shane-Dawson-God-Pig-T-Shirt/dp/B07KVK9CL4/ref=sxbs_sxwds-stvp?fst=as%3Aoff&pd_rd_i=B07KVK9CL4&pd_rd_r=a24e37ae-693c-4936-814d-b18ca7a6f104&pd_rd_w=6Iinc&pd_rd_wg=M4AGu&pf_rd_p=a6d018ad-f20b-46c9-8920-433972c7d9b7&pf_rd_r=A23M2N6QQS0Q60QT8QHQ&psc=1&qid=1578124368&refinements=p_89%3AShane+Dawson&rnid=2528832011&s=apparel#customerReviews';
+echo $url = 'https://www.amazon.com/dp/B07WR57CKL';
  
 $html = file_get_html($url);
 
@@ -10,9 +10,13 @@ $html = file_get_html($url);
 
 // exit();
 $images = array();
-foreach($html->find('img') as $img) {
- $images[] = $img->src;
-}
+// foreach($html->find('img') as $img) {
+//  $images[] = $img->src;
+// }
+
+foreach($html->find('img[id=landingImage]') as $img) {
+    $images[] = $img->src;
+    }
 
 echo "<pre>";
 var_dump($images);

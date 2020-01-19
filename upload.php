@@ -29,14 +29,16 @@ $uploadfile = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 echo '<pre>';
 if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $uploadfile)) {
     echo "File is valid, and was successfully uploaded.\n";
+    rename($uploadfile,$target_dir."my_file.txt");
 } else {
     echo "Possible file upload attack!\n";
 }
 
 $_SESSION['file']= $_FILES["fileToUpload"]["name"];
 
+
 // echo 'Here is some more debugging info:';
-$file = new SplFileObject($target_dir . basename($_FILES["fileToUpload"]["name"]));
+$file = new SplFileObject($target_dir ."my_file.txt");
 // Loop until we reach the end of the file.
 $i = 1;
 while (!$file->eof()) {

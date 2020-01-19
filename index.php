@@ -1,7 +1,18 @@
 <?php
+session_start();
+ob_start();
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 include 'config.php';
 getfunc('db');
 $oDB=new db();
+// var_dump($_SESSION['link']);
+if (isset($_SESSION['link']['id'])) {
+  # code...
+  // echo "Đã tồn tại";
+}else{
+  $_SESSION['link']['id']=1;
+  $_SESSION['link']['time']=1;
+}
 
 $sql = "SELECT * FROM link WHERE LinkOption=1 OR LinkOption=2";
 $arr = $oDB->query($sql)->fetchAll();
@@ -49,7 +60,7 @@ $arr = $oDB->query($sql)->fetchAll();
 }
 </style>
 
-<body>
+<body onLoad="newpage();">
 
 <form action="upload.php" method="post" enctype="multipart/form-data">
     Select file to upload:
@@ -63,7 +74,11 @@ $count = $oDB->query($sql)->fetchArray();
 
 $sql = "SELECT COUNT(*) as total FROM link Where LinkOption = 1";
 $count2 = $oDB->query($sql)->fetchArray();
-echo "<h1>".$count['total']."/".$count2['total']."</h1>";
+
+$sql = "SELECT COUNT(*) as total FROM link Where LinkOption = 4";
+$count3 = $oDB->query($sql)->fetchArray();
+
+echo "<h1>Đã tải : ".$count['total']." - Lỗi :".$count3['total']."  / Còn lại :".$count2['total']."</h1>";
 echo "<h3>Reset sau :".$timerf." giây</h3>"
 ?>
 <table id="customers">
@@ -96,20 +111,47 @@ function file_get_contents_curl($url) {
     return $data; 
 } 
 // var_dump($key);
+$openlink = 0;
 
-foreach ($arr as $key => $value) {
-    $title ="";
-    $flink ="";
-    if (isset($_GET['get'])&&$nextlinkid==$value['LinkId']) {
-      $url = $value['LinkName'];
+
+    //echo $value['LinkId'];
+    if (isset($_GET['get'])) {
+      $url = $next['LinkName'];
+      // echo $nextlinkid;
+      // echo "</Br>";
+      // var_dump($_SESSION['link']);
+      // echo "</Br>";
+      if ($_SESSION['link']['id']==$nextlinkid) {
+        // echo "Đã tồn tại";
+        if ($_SESSION['link']['time']>5) {
+          $sql = "UPDATE link set LinkOption = 4 Where LinkId=?";
+          $oDB->query($sql,$nextlinkid);
+          exit();
+        }
+        $_SESSION['link']['time'] += 1;
+      }else{
+        // echo "Chưa tồn tại";
+        $_SESSION['link']['id'] =$nextlinkid;
+        $_SESSION['link']['time'] =1;
+      }
+      // exit();
+      echo "</br>";
       echo "<a href='".$url."' target='_blank'>".$url."</a>";
+      $arraytime = array();
+      for ($i=0; $i < 60; $i++) { 
+        $arraytime[] = $i*40;
+      }
+      if (in_array($nextlinkid,$arraytime)) {
+        $openlink = 1;
+      }
       
       if (file_get_html($url)) {
         $html = file_get_html($url);
+        $_SESSION['getimage']['link']=$url;
       } else {
         echo "Không get được file";
         $sql = "UPDATE link set LinkOption = 4 Where LinkId=?";
-        $oDB->query($sql,$value['LinkId']);
+        $oDB->query($sql,$nextlinkid);
         exit();
       }
       
@@ -119,10 +161,13 @@ foreach ($arr as $key => $value) {
       // exit();
       $images = array();
  
-      foreach($html->find('img[id=landingImage]') as $img) {
+      foreach($html->find('img') as $img) {
       $images[] = $img->src;
       }
-      // var_dump($image);
+      // echo "<pre>";
+      // var_dump($images);
+      // echo "</pre>";
+      // exit();
       $headlines = array();
       foreach($html->find('span[id=productTitle]') as $header) {
       $headlines[] = $header->plaintext;
@@ -131,9 +176,9 @@ foreach ($arr as $key => $value) {
       if (!isset($images[0])) {
         header('Location: index.php');
         exit();
-        echo $images[0];
+        echo $images[6];
       }
-      $link = $images[0];
+      $link = $images[6];
       $title = $headlines[0];
       $link1 = substr($link,0,36);
       // $link2 = substr($link,72,15);
@@ -145,6 +190,8 @@ foreach ($arr as $key => $value) {
       if (strlen($link2)>20) {
         echo $link2;
         echo "<p>Không thành công, ko phải link ảnh</p>";
+        echo "</br>";
+        var_dump ($_SESSION['link']);
         exit();
         }
       $flink = $link1.$link2;
@@ -152,8 +199,11 @@ foreach ($arr as $key => $value) {
     //Kiểm tra link có hợp lệ không đã 
     if (substr($link2, -4) == '.png') {
       echo $link2;
+      echo "</br>";
+      // unset($_SESSION['link'][$nextlinkid]);
     }else{
       echo $link2;
+      echo "</br>";
       exit();
     }
       
@@ -214,10 +264,26 @@ foreach ($arr as $key => $value) {
     $image->save('image/fn/'.$name);
 
     $sql = "UPDATE link set LinkOption = 2, LinkPicture=?, LinkTitle = ? Where LinkId=?";
-    $oDB->query($sql,$name,$title,$value['LinkId']);
- 
-  
+    $oDB->query($sql,$name,$title,$nextlinkid);
+    
+    
+    if ($openlink==1) {
+      ?>
+      <script>
+        function newpage() {
+           window.open("<?php echo $_SESSION['getimage']['link'] ?>", '_blank');
+        }
+  </script>
+
+      <?php
+      $openlink=0;
+
     }
+    
+    }
+foreach ($arr as $key => $value) {
+  $title ="";
+  $flink ="";
     if (!isset($_GET['get'])) {
       echo "<tr>";
     echo "<td>".$value['LinkId']."</td>";
