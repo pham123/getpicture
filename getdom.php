@@ -2,7 +2,7 @@
  
 include('simple_html_dom.php');
  
-echo $url = 'https://www.amazon.com/dp/B07WR57CKL';
+echo $url = 'https://www.amazon.com/Disney-Frozen-Character-Panels-T-Shirt/dp/B07YQJQGBQ/ref=pd_sbs_193_1/141-7775437-9676220?_encoding=UTF8&pd_rd_i=B07YQJQGBQ&pd_rd_r=093f0dc2-907b-4b86-861d-128ca94fb06c&pd_rd_w=ZydmK&pd_rd_wg=onZEV&pf_rd_p=bdd201df-734f-454e-883c-73b0d8ccd4c3&pf_rd_r=6Y90918TFX60NZJX0YJB&psc=1&refRID=6Y90918TFX60NZJX0YJB';
  
 $html = file_get_html($url);
 
@@ -10,13 +10,13 @@ $html = file_get_html($url);
 
 // exit();
 $images = array();
-// foreach($html->find('img') as $img) {
-//  $images[] = $img->src;
-// }
+foreach($html->find('img') as $img) {
+ $images[] = $img->src;
+}
 
-foreach($html->find('img[id=landingImage]') as $img) {
-    $images[] = $img->src;
-    }
+// foreach($html->find('img[id=landingImage]') as $img) {
+//     $images[] = $img->src;
+//     }
 
 echo "<pre>";
 var_dump($images);

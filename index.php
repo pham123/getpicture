@@ -163,7 +163,7 @@ $openlink = 0;
       $images = array();
  
       foreach($html->find('img') as $img) {
-        if (strlen($img->src)==150) {
+        if (strlen($img->src)==150||strlen($img->src)==152||strlen($img->src)==154||strlen($img->src)==156||strlen($img->src)==158) {
           $target = $img->src;
         }
         $images[] = $img->src;
