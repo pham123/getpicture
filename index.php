@@ -168,7 +168,6 @@ $openlink = 0;
         }
         $images[] = $img->src;
       }
-
       echo "<pre>";
       var_dump($images);
       echo "</pre>";
