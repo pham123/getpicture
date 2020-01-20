@@ -138,7 +138,8 @@ $openlink = 0;
       echo "</br>";
       echo "<a href='".$url."' target='_blank'>".$url."</a>";
       $arraytime = array();
-      for ($i=0; $i < 60; $i++) { 
+      $arraytime[] = 3;
+      for ($i=1; $i < 60; $i++) { 
         $arraytime[] = $i*40;
       }
       if (in_array($nextlinkid,$arraytime)) {
@@ -162,11 +163,15 @@ $openlink = 0;
       $images = array();
  
       foreach($html->find('img') as $img) {
-      $images[] = $img->src;
+        if (strlen($img->src)==150) {
+          $target = $img->src;
+        }
+        $images[] = $img->src;
       }
-      // echo "<pre>";
-      // var_dump($images);
-      // echo "</pre>";
+
+      echo "<pre>";
+      var_dump($images);
+      echo "</pre>";
       // exit();
       $headlines = array();
       foreach($html->find('span[id=productTitle]') as $header) {
@@ -176,9 +181,10 @@ $openlink = 0;
       if (!isset($images[0])) {
         header('Location: index.php');
         exit();
-        echo $images[6];
+        echo $target;
       }
-      $link = $images[6];
+      $target = (isset($target)) ? $target : $images[6] ;
+      $link = $target;
       $title = $headlines[0];
       $link1 = substr($link,0,36);
       // $link2 = substr($link,72,15);
