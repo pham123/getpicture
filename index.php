@@ -138,6 +138,7 @@ $openlink = 0;
       echo "</br>";
       echo "<a href='".$url."' target='_blank'>".$url."</a>";
       $arraytime = array();
+      $arraytime[] = 3;
       for ($i=0; $i < 60; $i++) { 
         $arraytime[] = $i*40;
       }
@@ -164,9 +165,9 @@ $openlink = 0;
       foreach($html->find('img') as $img) {
       $images[] = $img->src;
       }
-      // echo "<pre>";
-      // var_dump($images);
-      // echo "</pre>";
+      echo "<pre>";
+      var_dump($images);
+      echo "</pre>";
       // exit();
       $headlines = array();
       foreach($html->find('span[id=productTitle]') as $header) {
