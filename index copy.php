@@ -92,7 +92,7 @@ echo "<h3>Reset sau :".$timerf." giây</h3>"
 
 
 <?php
-// include('simple_html_dom.php');
+include('simple_html_dom.php');
 $select = "SELECT * FROM link where LinkOption=1  LIMIT 1";
 $next = $oDB->query($select)->fetchArray();
 if (isset($next['LinkId'])) {
@@ -145,79 +145,77 @@ $openlink = 0;
       if (in_array($nextlinkid,$arraytime)) {
         $openlink = 1;
       }
-
-      $opts = array(
-        'http'=>array(
-          'method'=>"GET",
-          'header'=>"Accept-language: en\r\n" .
-                    "Cookie: foo=bar\r\n"
-        )
-      );
       
-      $context = stream_context_create($opts);
+      if (file_get_html($url)) {
+        $html = file_get_html($url);
+        $_SESSION['getimage']['link']=$url;
+      } else {
+        echo "Không get được file";
+        $sql = "UPDATE link set LinkOption = 4 Where LinkId=?";
+        $oDB->query($sql,$nextlinkid);
+        exit();
+      }
       
-      // Open the file using the HTTP headers set above
-      $file = file_get_contents($url, false, $context);
 
       
-    //   var_dump($file);
-    
-    // $myfile = fopen("testfile2.txt", "w");
-    // $myfile = fopen("testfile2.txt", "w") or die("Unable to open file!");
-    // fwrite($myfile, $file);
-    // fclose($myfile);
-    
-    $subject = $file;
-    $pattern = '/\<span id\=\"productTitle\" class\=\"a-size-large\"\>[\d\w\n\s\-\_\'\%\*\^\&\#\@\!\.\,\[\]\{\}\+\=\|\)\(\$\;\:\"\?]+\<\/span\>/';
-    preg_match($pattern, substr($subject,3), $matches, PREG_OFFSET_CAPTURE);
-    // print_r($matches);
-    $title = $matches[0][0];
-          
-    if (isset($matches[0][0])) {
-      $_SESSION['getimage']['link']=$url;
-    } else {
-      echo "Không get được file";
-      $sql = "UPDATE link set LinkOption = 4 Where LinkId=?";
-      $oDB->query($sql,$nextlinkid);
+      // var_dump($html);
+      // exit();
+      $images = array();
+ 
+      foreach($html->find('img') as $img) {
+        if (strlen($img->src)==150||strlen($img->src)==152||strlen($img->src)==154||strlen($img->src)==156||strlen($img->src)==158) {
+          $target = $img->src;
+        }
+        $images[] = $img->src;
+      }
+      echo "<pre>";
+      var_dump($images);
+      echo "</pre>";
+      // exit();
+      $headlines = array();
+      foreach($html->find('span[id=productTitle]') as $header) {
+      $headlines[] = $header->plaintext;
+      }
+
+      if (!isset($images[0])) {
+        header('Location: index.php');
+        exit();
+        echo $target;
+      }
+      $target = (isset($target)) ? $target : $images[6] ;
+      $link = $target;
+      $title = $headlines[0];
+      $link1 = substr($link,0,36);
+      // $link2 = substr($link,72,15);
+      
+      $pos1 = strpos($link, '.png%7C');
+      echo "<Br>";
+      $pos2 = strpos($link, 'C2000%7C');
+      $link2 =substr($link,$pos2+8,$pos1-$pos2-4);
+      if (strlen($link2)>20) {
+        echo $link2;
+        echo "<p>Không thành công, ko phải link ảnh</p>";
+        echo "</br>";
+        var_dump ($_SESSION['link']);
+        exit();
+        }
+      $flink = $link1.$link2;
+
+    //Kiểm tra link có hợp lệ không đã 
+    if (substr($link2, -4) == '.png') {
+      echo $link2;
+      echo "</br>";
+      // unset($_SESSION['link'][$nextlinkid]);
+    }else{
+      echo $link2;
+      echo "</br>";
       exit();
     }
-
-    $title = trim(preg_replace('/\s+/', ' ', $title));
-    $title = trim(preg_replace('/\<span id\=\"productTitle\" class\=\"a-size-large\"\>/', ' ', $title));
-    $title = trim(preg_replace('/\<\/span\>/', ' ', $title));
-    $title2 = trim(preg_replace('/\s+/', '_', $title));
-    
-    // echo $title;
-    // echo "</br>";
-    // echo $title2;
-    // echo "</br>";
-    // exit();
-    $pattern2 = '/data-old-hires\=\"https\:\/\/m\.media\-amazon\.com\/images\/I\/[\d\w\.\%\-\_]+\.png\%/';
-    preg_match($pattern2, substr($subject,3), $matches2, PREG_OFFSET_CAPTURE);
-    // print_r($matches2);
-    $fulllink = $matches2[0][0];
-    $pattern3 = '/0\%7C[\d\w\%\-\_]+.png/';
-    preg_match($pattern3, substr($fulllink,3), $matches3, PREG_OFFSET_CAPTURE);
-    // echo $matches3[0][0];
-    // echo "</br>";
-    $prelink = substr($matches3[0][0],4);
-    $flink = "https://m.media-amazon.com/images/I/".$prelink;
-
-    // //Kiểm tra link có hợp lệ không đã 
-    // if (substr($link2, -4) == '.png') {
-    //   echo $link2;
-    //   echo "</br>";
-    //   // unset($_SESSION['link'][$nextlinkid]);
-    // }else{
-    //   echo $link2;
-    //   echo "</br>";
-    //   exit();
-    // }
       
   $data = file_get_contents_curl($flink);
-  // $title = trim($title," ");
-  // $title = str_replace(' ', '_', $title);
-  // $title = preg_replace("/[^A-Za-z0-9]/", '_', $title);
+  $title = trim($title," ");
+  $title = str_replace(' ', '_', $title);
+  $title = preg_replace("/[^A-Za-z0-9]/", '_', $title);
     
   $name = $title.".png";
   $fp = 'image/'.$name; 
