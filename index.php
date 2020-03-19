@@ -22,7 +22,7 @@ $arr = $oDB->query($sql)->fetchAll();
 <head>
     <meta charset="UTF-8">
     <?php
-    $timerf = rand(7,12);
+    $timerf = rand(4,6);
       if (isset($_GET['get'])) {
         ?>
         

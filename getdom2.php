@@ -2,7 +2,8 @@
  
 // include('simple_html_dom.php');
  
-$url = 'https://www.amazon.com/dp/B08365PGBG';
+// $url = 'https://www.amazon.com/dp/B081FTR951';
+$url = 'https://www.amazon.com/dp/B07L1XZMXR';
 
 // $html = file_get_html($url);
 // $homepage = file_get_contents($url);
